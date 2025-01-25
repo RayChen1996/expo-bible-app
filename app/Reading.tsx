@@ -1,4 +1,5 @@
 import {
+  Image,
   Pressable,
   Spinner,
   Text,
@@ -59,6 +60,12 @@ export default function Reading() {
       fetchBibleVerses(decodeURI(book!), currentChapter.toString()),
   });
 
+  //https://images.pexels.com/photos/272337/pexels-photo-272337.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1
+  //https://images.pexels.com/photos/1848731/pexels-photo-1848731.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1
+  //https://images.pexels.com/photos/273936/pexels-photo-273936.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1
+  //https://images.pexels.com/photos/2258240/pexels-photo-2258240.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1
+  //https://images.pexels.com/photos/273936/pexels-photo-273936.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1
+  //https://images.pexels.com/photos/1771219/pexels-photo-1771219.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1
   useEffect(() => {
     refetch();
   }, [currentChapter, refetch, chapter]);
@@ -85,7 +92,21 @@ export default function Reading() {
 }
 
 const RenderItem = memo(function ({ item }: { item: Verse }) {
-  const toast = useToast();
+  // const toast = useToast();
+
+  const images = [
+    "https://images.pexels.com/photos/272337/pexels-photo-272337.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/1848731/pexels-photo-1848731.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/273936/pexels-photo-273936.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/2258240/pexels-photo-2258240.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/273936/pexels-photo-273936.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/1771219/pexels-photo-1771219.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+  ];
+
+  function getRandomImage() {
+    return images[Math.floor(Math.random() * images.length)];
+  }
+
   return (
     <VStack my={10}>
       <Pressable
@@ -148,9 +169,22 @@ const RenderItem = memo(function ({ item }: { item: Verse }) {
           }
         }}
       >
-        <Text>
-          {item?.verse}. {item?.text}
-        </Text>
+        <VStack>
+          <Text>
+            {item?.verse}. {item?.text}
+          </Text>
+
+          {item.verse % 3 === 0 && (
+            <Image
+              w={"$full"}
+              h={200}
+              objectFit="cover"
+              mt={10}
+              source={{ uri: getRandomImage() }}
+              alt="random"
+            />
+          )}
+        </VStack>
       </Pressable>
     </VStack>
   );
