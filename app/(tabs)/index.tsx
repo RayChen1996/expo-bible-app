@@ -12,14 +12,15 @@ import { Book, oldTestament } from "@/util/options/oldTestament";
 import { newTestament } from "@/util/options/newTestament";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useMemo } from "react";
-import { Link } from "expo-router";
+import { useRouter } from "expo-router";
 export default function TabOneScreen() {
+  const { push } = useRouter();
   const old_data: Book[] = useMemo(() => oldTestament, []);
   const new_data: Book[] = useMemo(() => newTestament, []);
   return (
     <SafeAreaProvider>
-      <ScrollView>
-        <View mx={4}>
+      <ScrollView px={20} my={20}>
+        <View>
           <FlatList
             data={old_data}
             numColumns={2}
@@ -30,13 +31,17 @@ export default function TabOneScreen() {
                   justifyContent={"center"}
                   alignItems="center"
                 >
-                  <Button size="md" my={2} w={"$2/3"}>
-                    <Link
-                      href={`/Reading?book=${item.bookName}&chapter=1`}
-                      asChild
-                    >
-                      <ButtonText>{item.bookName}</ButtonText>
-                    </Link>
+                  <Button
+                    onPress={() => {
+                      push(
+                        `/pickChap?book=${item.bookName}&totalChapters=${item.totalChapters}`
+                      );
+                    }}
+                    size="md"
+                    my={2}
+                    w={"$2/3"}
+                  >
+                    <ButtonText>{item.bookName}</ButtonText>
                   </Button>
                 </HStack>
               );
@@ -44,8 +49,8 @@ export default function TabOneScreen() {
             keyExtractor={(item, index) => index.toString()}
           />
         </View>
-        <Divider />
-        <View mx={4} mt={50}>
+        <Divider my={50} />
+        <View>
           <FlatList
             data={new_data}
             numColumns={2}
@@ -57,13 +62,16 @@ export default function TabOneScreen() {
                   key={"new"}
                   w={"$1/2"}
                 >
-                  <Button my={2} w={"$2/3"}>
-                    <Link
-                      href={`/Reading?book=${item.bookName}&chapter=1`}
-                      asChild
-                    >
-                      <ButtonText>{item.bookName}</ButtonText>
-                    </Link>
+                  <Button
+                    onPress={() => {
+                      push(
+                        `/pickChap?book=${item.bookName}&totalChapters=${item.totalChapters}`
+                      );
+                    }}
+                    my={2}
+                    w={"$2/3"}
+                  >
+                    <ButtonText>{item.bookName}</ButtonText>
                   </Button>
                 </HStack>
               );
