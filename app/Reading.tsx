@@ -1,4 +1,6 @@
+import { FontAwesome } from "@expo/vector-icons";
 import {
+  HStack,
   Image,
   Pressable,
   Spinner,
@@ -109,70 +111,75 @@ const RenderItem = memo(function ({ item }: { item: Verse }) {
 
   return (
     <VStack my={10}>
-      <Pressable
-        onPress={async () => {
-          const db = await SQLite.openDatabaseAsync("bibles");
-
-          const statement = await db.prepareAsync(
-            "INSERT INTO scriptures (book, chapter, verse, content, date_added, read_count) VALUES (?, ?, ?, ?, ?, ?)"
-          );
-          try {
-            const result = await statement.executeAsync([
-              item.book_name,
-              item.chapter,
-              item.verse,
-              item.text,
-              new Date().toISOString().split("T")[0],
-              0,
-            ]);
-
-            const selectStatement = await db.prepareAsync(
-              "SELECT * FROM scriptures WHERE book = ? AND chapter = ? AND verse = ?"
-            );
-            try {
-              const selectResult = await selectStatement.executeAsync([
-                item.book_name,
-                item.chapter,
-                item.verse,
-              ]);
-
-              if (selectResult.changes === 0) {
-                Alert.alert("新增失敗");
-              } else {
-                // console.log("新增成功");
-                Alert.alert("新增成功");
-                // toast.show({
-                //   placement: "top",
-                //   render: ({ id }) => {
-                //     const toastId = "toast-" + id;
-                //     return (
-                //       <Toast nativeID={toastId} action="attention">
-                //         <VStack space="xs" flex={1}>
-                //           <Text> !! </Text>
-                //           <ToastTitle color="#000"> 新增成功</ToastTitle>
-                //           <ToastDescription></ToastDescription>
-                //         </VStack>
-                //       </Toast>
-                //     );
-                //   },
-                // });
-              }
-            } catch (e) {
-              console.log(e);
-            } finally {
-              await selectStatement.finalizeAsync();
-            }
-          } catch (e) {
-            console.log(e);
-          } finally {
-            await statement.finalizeAsync();
-          }
-        }}
-      >
+      <Pressable>
         <VStack>
           <Text>
             {item?.verse}. {item?.text}
           </Text>
+          <HStack justifyContent="flex-end" my={10}>
+            <Pressable
+              onPress={async () => {
+                const db = await SQLite.openDatabaseAsync("bibles");
+
+                const statement = await db.prepareAsync(
+                  "INSERT INTO scriptures (book, chapter, verse, content, date_added, read_count) VALUES (?, ?, ?, ?, ?, ?)"
+                );
+                try {
+                  const result = await statement.executeAsync([
+                    item.book_name,
+                    item.chapter,
+                    item.verse,
+                    item.text,
+                    new Date().toISOString().split("T")[0],
+                    0,
+                  ]);
+
+                  const selectStatement = await db.prepareAsync(
+                    "SELECT * FROM scriptures WHERE book = ? AND chapter = ? AND verse = ?"
+                  );
+                  try {
+                    const selectResult = await selectStatement.executeAsync([
+                      item.book_name,
+                      item.chapter,
+                      item.verse,
+                    ]);
+
+                    if (selectResult.changes === 0) {
+                      Alert.alert("新增失敗");
+                    } else {
+                      // console.log("新增成功");
+                      Alert.alert("新增成功");
+                      // toast.show({
+                      //   placement: "top",
+                      //   render: ({ id }) => {
+                      //     const toastId = "toast-" + id;
+                      //     return (
+                      //       <Toast nativeID={toastId} action="attention">
+                      //         <VStack space="xs" flex={1}>
+                      //           <Text> !! </Text>
+                      //           <ToastTitle color="#000"> 新增成功</ToastTitle>
+                      //           <ToastDescription></ToastDescription>
+                      //         </VStack>
+                      //       </Toast>
+                      //     );
+                      //   },
+                      // });
+                    }
+                  } catch (e) {
+                    console.log(e);
+                  } finally {
+                    await selectStatement.finalizeAsync();
+                  }
+                } catch (e) {
+                  console.log(e);
+                } finally {
+                  await statement.finalizeAsync();
+                }
+              }}
+            >
+              <FontAwesome name="bookmark" size={20} />
+            </Pressable>
+          </HStack>
 
           {item.verse % 3 === 0 && (
             <Image
